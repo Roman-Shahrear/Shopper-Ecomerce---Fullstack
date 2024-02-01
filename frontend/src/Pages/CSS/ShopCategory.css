@@ -1,0 +1,116 @@
+.shopcategory-banner{
+    display: block;
+    margin: 30px auto;
+    width: 80%;
+}
+
+.shopcategory-indexsort{
+    display: flex;
+    margin: 0px 200px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.shopcategory-sort{
+    padding: 10px 20px;
+    border-radius: 40px;
+    border: 1px solid #888;
+}
+
+.shopcategory-indexsort p span{
+    font-weight: 600;
+}
+
+.shopcategory-products{
+    margin: 20px 200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    row-gap: 80px;
+
+}
+
+.shopcategory-lodmore{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 150px auto;
+    width: 233px;
+    height: 69px;
+    border-radius: 75px;
+    background: #ededed;
+    color: #787878;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+@media(max-width: 1280px){
+    .shopcategory-banner{
+        margin: 20px auto;
+    }
+    .shopcategory-indexSort{
+        width: 90%;
+        margin: auto;
+    }
+    .shopctegory-sort{
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    .shopcategory-indexSort p{
+        font-size: 12px;
+    }
+    .shopcategory-products{
+        width: 90%;
+        margin: 18px auto;
+        row-gap: 40px;
+        margin-left: 130px;
+    }
+    .shopcategory-producs .item{
+        margin: auto;
+    }
+    .shopcategory-lodmore{
+        margin: 100px auto;
+        width: 200px;
+        height: 60px;
+        font-size: 16px;
+    }
+}
+
+@media(max-width: 800px){
+    .shopcategory-banner{
+        margin: 20px auto;
+        width: 69%;
+    }
+    .shopcategory-products{
+        width: 80%;
+        row-gap: 30px;
+    }
+    .shopcategory-lodmore{
+        margin: 60px auto;
+        width: 150px;
+        height: 40px;
+        font-size: 13px;
+    }
+}
+
+@media(max-width: 500px){
+    .shopcategory-products{
+        grid-template-columns: 1fr 1fr;
+        margin-left: 75px;
+    }
+    .shopcategory-banner{
+        width: 85%;
+        margin-left: 100px;
+    }
+    .shopcategory-indexsort p{
+        font-size: 12px;
+    }
+    .shopcategory-indexsort span{
+        font-size: 12px;
+    }
+    .shopcategory-sort{
+        height: 25px;
+        width: 95px;
+        font-size: 10px;
+    }
+}
