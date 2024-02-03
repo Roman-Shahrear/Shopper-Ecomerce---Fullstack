@@ -3,11 +3,24 @@ const dotenv = require("dotenv");
 const path = require("path");
 const multer = require("multer");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 
 const app = express();
-app.use(cors());
-// app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+// CORS configuration
+const allowedOrigins = ["http://localhost:5173"]; // Adjust as needed
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // Route Imports
@@ -22,19 +35,20 @@ const errorMiddleware = require("./middleware/error");
 // config
 dotenv.config({path:"backend/config/config.env"});
 
-//Image Storage Engine configure
+// Image Storage Engine configuration
 const storage = multer.diskStorage({
-    destination: "./upload/images",
-    filename:(req, file, cb)=> {
-        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-    }
+    destination: path.join(__dirname, "upload/images"),
+    filename: (req, file, cb) => {
+        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+    },
 });
 
-//For Use multer
-const upload = multer({storage:storage});
+// For using multer
+const upload = multer({ storage: storage });
 
-//Creating Upload Endpoint for images
-app.use("/images", express.static("upload/images"));
+// Creating Upload Endpoint for images
+app.use("/images", express.static(path.join(__dirname, "upload/images")));
+
 
 app.post("/upload", upload.single("product"), (req, res)=>{
     res.json({
@@ -44,10 +58,6 @@ app.post("/upload", upload.single("product"), (req, res)=>{
 });
 
 
-app.use(express.json());
-
-app.get("/", (req, res)=>{
-    res.send("Express app is runing");
-})
 
 module.exports = app;
+
