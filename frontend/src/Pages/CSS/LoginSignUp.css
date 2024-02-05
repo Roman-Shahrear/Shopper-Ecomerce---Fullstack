@@ -65,6 +65,7 @@
 .loginsignup-login span{
     color: #ff4141;
     font-weight: 600;
+    cursor: pointer;
 }
 
 .loginsignup-agree{
@@ -85,6 +86,7 @@
 
 @media(max-width: 800px){
     .loginsignup{
+        /* margin-top: 70px; */
         margin-bottom: 10px;
     }
     .loginsignup{

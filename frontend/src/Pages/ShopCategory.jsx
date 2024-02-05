@@ -1,18 +1,23 @@
 import React, { useContext } from 'react';
 import "./CSS/ShopCategory.css";
-import { ShopContext } from '../Context/ShopContext';
 import dropdown_icon from "../Components/Assets/dropdown_icon.png";
 import Item from "../Components/Item/Item";
+import { ShopContext } from '../Context/ShopContext';
 
-const ShopCategory = (props) => {
+const ShopCategory = ({ banner, category }) => {
   const { all_product } = useContext(ShopContext);
+  
+  // Check if all_product is an array before using filter
+  if (!Array.isArray(all_product)) {
+    console.error("Invalid data structure for all_product");
+    return null;
+  }
 
-  // Filter the products based on the specified category
-  const filteredProducts = all_product.filter(item => props.category === item.category);
-
+  const filteredProducts = all_product.filter(product => product.category === category);
+  
   return (
-    <div className='shop-category'> 
-      <img className='shopcategory-banner' src={props.banner} alt="Category Banner" />
+    <div className='shop-category'>
+      <img className='shopcategory-banner' src={banner} alt="Category Banner" />
       <div className="shopcategory-indexsort">
         <p>
           <span className='span'>Showing 1-{filteredProducts.length}</span> out of products
@@ -22,9 +27,9 @@ const ShopCategory = (props) => {
         </div>
       </div>
       <div className="shopcategory-products">
-        {filteredProducts.map((item, index) => (
+        {filteredProducts.map((item) => (
           <Item 
-            key={index}
+            key={item.id}
             id={item.id}
             name={item.name}
             image={item.image}
@@ -34,7 +39,7 @@ const ShopCategory = (props) => {
         ))}
       </div>
       <div className="shopcategory-lodmore">
-          Explore More 
+        Explore More
       </div>
     </div>
   );

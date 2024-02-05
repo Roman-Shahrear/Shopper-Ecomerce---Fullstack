@@ -31,18 +31,20 @@ const Navbar = () => {
         <li onClick={() => handleMenuClick('shop')}>
           <Link style={{textDecoration: "none"}} to="/">Shop</Link>{menu === 'shop' ? <hr /> : <></>}
         </li>
-        <li onClick={() => handleMenuClick('mens')}>
-          <Link style={{textDecoration: "none"}} to="/mens">Men</Link>{menu === 'mens' ? <hr /> : <></>}
+        <li onClick={() => handleMenuClick('men')}>
+          <Link style={{textDecoration: "none"}} to="/men">Men</Link>{menu === 'men' ? <hr /> : <></>}
         </li>
-        <li onClick={() => handleMenuClick('womens')}>
-          <Link style={{textDecoration: "none"}} to="/womens">Women</Link>{menu === 'womens' ? <hr /> : <></>}
+        <li onClick={() => handleMenuClick('women')}>
+          <Link style={{textDecoration: "none"}} to="/women">Women</Link>{menu === 'women' ? <hr /> : <></>}
         </li>
-        <li onClick={() => handleMenuClick('kids')}>
-          <Link style={{textDecoration: "none"}} to="/kids">Kids</Link>{menu === 'kids' ? <hr /> : <></>}
+        <li onClick={() => handleMenuClick('kid')}>
+          <Link style={{textDecoration: "none"}} to="/kid">Kids</Link>{menu === 'kid' ? <hr /> : <></>}
         </li>
       </ul>
       <div className="nav-login-cart">
-        <Link style={{textDecoration: "none"}} to="/login"><button>Login</button></Link>
+        {localStorage.getItem("auth-token") ? <button onClick={()=>{localStorage.removeItem("auth-token");
+        window.location.replace("/");}}>Logout</button> : <Link style={{textDecoration: "none"}} to="/login">
+        <button>Login</button></Link>}
         <Link style={{textDecoration: "none"}} to="/cart"><img src={cart_icon} alt="cart_icon" /></Link>
         <div className="nav-cart-count">{getTotalCartQuantity()}</div>
       </div>

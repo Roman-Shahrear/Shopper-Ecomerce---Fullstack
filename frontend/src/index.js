@@ -1,16 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client'; // Corrected import
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ShopContextProvider from "./Context/ShopContext";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <ShopContextProvider>
-    <App />
-  </ShopContextProvider>
-  
+const rootElement = document.getElementById('root');
+
+createRoot(rootElement).render(
+  <React.StrictMode>
+    <ShopContextProvider>
+      <App />
+    </ShopContextProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
