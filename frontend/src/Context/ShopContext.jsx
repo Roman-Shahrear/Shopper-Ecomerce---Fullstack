@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 
 export const ShopContext = createContext(null);
-// Validate the structure of products in getDefaultCart function
+
 const getDefaultCart = (productsData) => {
   const products = productsData.data || [];
 
@@ -15,8 +15,10 @@ const getDefaultCart = (productsData) => {
 };
 
 const ShopContextProvider = ({ children }) => {
-  const [all_product, setAll_product] = useState([]);
-  const [cartItems, setCartItem] = useState(getDefaultCart(all_product));
+  const [allProducts, setAllProducts] = useState([]);
+  const [cartItems, setCartItems] = useState(getDefaultCart({ data: allProducts }));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:4000/api/v1/allproducts")
@@ -28,28 +30,17 @@ const ShopContextProvider = ({ children }) => {
       })
       .then((data) => {
         console.log("Data from API:", data);
-        setAll_product(data.data || []);
-        setCartItem(getDefaultCart(data.data || []));
+        setAllProducts(data.data || []);
+        setCartItems(getDefaultCart(data || []));
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
-  
-
-  const addToCart = (itemId) => {
-    setCartItem((prev) => {
-      const updatedCart = { ...prev, [itemId]: prev[itemId] + 1 };
-      return updatedCart;
-    });
-  };
-
-  const removeFromCart = (itemId) => {
-    setCartItem((prev) => {
-      const updatedCart = { ...prev, [itemId]: prev[itemId] - 1 };
-      return updatedCart;
-    });
-  };
 
   const getTotalCartQuantity = () => {
     let totalQuantity = 0;
@@ -65,7 +56,7 @@ const ShopContextProvider = ({ children }) => {
     let totalAmount = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        let itemInfo = all_product.find(
+        let itemInfo = allProducts.find(
           (product) => product.id === Number(item)
         );
         totalAmount += itemInfo ? itemInfo.new_price * cartItems[item] : 0;
@@ -75,13 +66,49 @@ const ShopContextProvider = ({ children }) => {
   };
 
   const contextValue = {
-    all_product,
+    allProducts,
     cartItems,
-    addToCart,
-    removeFromCart,
+    addToCart: (itemId) => handleAddToCart(itemId),
+    removeFromCart: (itemId) => handleRemoveFromCart(itemId),
     getTotalCartAmount,
     getTotalCartQuantity,
   };
+
+  const handleAddToCart = (itemId) => {
+    setCartItems((prev) => {
+      const updatedCart = { ...prev, [itemId]: prev[itemId] + 1 };
+      if (localStorage.getItem("auth-token")) {
+        fetch("http://localhost:4000/addtocart", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "auth-token": localStorage.getItem("auth-token"),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ itemId }),
+        })
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((error) => console.error("Error adding to cart:", error));
+      }
+      return updatedCart;
+    });
+  };
+
+  const handleRemoveFromCart = (itemId) => {
+    setCartItems((prev) => {
+      const updatedCart = { ...prev, [itemId]: Math.max(0, prev[itemId] - 1) };
+      return updatedCart;
+    });
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error loading data: {error.message}</p>;
+  }
 
   return (
     <ShopContext.Provider value={contextValue}>

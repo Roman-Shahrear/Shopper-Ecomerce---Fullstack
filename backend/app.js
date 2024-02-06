@@ -3,11 +3,18 @@ const dotenv = require("dotenv");
 const path = require("path");
 const multer = require("multer");
 const cors = require("cors");
+const product = require("./routes/productRoutes");
+const user = require("./routes/userRoutes");
 
 const app = express();
+const errorMiddleware = require("./middleware/error");
+
+//config
+dotenv.config({path:"backend/config/config.env"});
+
 app.use(express.json());
 // CORS configuration
-const allowedOrigins = ["http://localhost:5173"]; // Adjust as needed
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
 
 const corsOptions = {
     origin: (origin, callback) => {
@@ -21,21 +28,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(express.json());
-
-// Route Imports
-const product = require("./routes/productRoutes");
 
 app.use("/api/v1", product);
+app.use("/api/v1", user);
 
 
-//Error middleware
-const errorMiddleware = require("./middleware/error");
+// ... (other middleware and routes)
 
-// config
-dotenv.config({path:"backend/config/config.env"});
-
-// Image Storage Engine configuration
 const storage = multer.diskStorage({
     destination: path.join(__dirname, "upload/images"),
     filename: (req, file, cb) => {
@@ -43,14 +42,11 @@ const storage = multer.diskStorage({
     },
 });
 
-// For using multer
 const upload = multer({ storage: storage });
 
-// Creating Upload Endpoint for images
 app.use("/images", express.static(path.join(__dirname, "upload/images")));
 
-
-app.post("/upload", upload.single("product"), (req, res)=>{
+app.post("/upload", upload.single("product"), (req, res) => {
     res.json({
         success: 1,
         image_url: `http://localhost:${process.env.PORT}/images/${req.file.filename}`
@@ -58,6 +54,7 @@ app.post("/upload", upload.single("product"), (req, res)=>{
 });
 
 
+// Middleware for Errors
+app.use(errorMiddleware);
 
 module.exports = app;
-
