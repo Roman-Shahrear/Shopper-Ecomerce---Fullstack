@@ -93,8 +93,3 @@ exports.popularCollectionInWomen = catchAsyncErrors(async(req, res, next)=>{
     res.send(popularCollectionInWomen);
 });
 
-//Add to cart
-exports.addToCart = catchAsyncErrors(async(req, res, next)=>{
-    console.log(req.body);
-})
-

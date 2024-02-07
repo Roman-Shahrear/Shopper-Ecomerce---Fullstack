@@ -5,14 +5,17 @@ const multer = require("multer");
 const cors = require("cors");
 const product = require("./routes/productRoutes");
 const user = require("./routes/userRoutes");
-
 const app = express();
 const errorMiddleware = require("./middleware/error");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 //config
 dotenv.config({path:"backend/config/config.env"});
 
 app.use(express.json());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: true}));
 // CORS configuration
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
 
